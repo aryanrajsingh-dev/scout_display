@@ -31,12 +31,23 @@ class HudFrameOverlay extends StatelessWidget {
             h - 2 * (m + inset),
           );
 
-          final topPad = rect.height * 0.02;
-          final topY = rect.top + rect.height * 0.042 + topPad;
-          final labelH = (s * 0.068).clamp(28.0, 52.0).toDouble();
+          final thin = (s * 0.002).clamp(1.0, 2.5).toDouble();
 
-          final left = rect.left + rect.width * 0.04;
-          final maxWidth = rect.width * 0.36;
+          // MODE label lives between the inner (steel) top border and the
+          // header gradient line below it.
+          final innerInset =
+              s * 0.03; // must match _HudFramePainter inner deflate
+          final innerTop = rect.top + innerInset;
+
+          // Bigger on larger screens, still clamps for small screens.
+          // Slightly overlap the inner border so it feels "attached".
+          // Nudge down a bit to better sit between the two header lines.
+          final topY = innerTop - thin * 0.15;
+          final labelH = (s * 0.088).clamp(30.0, 86.0).toDouble();
+
+          // Align with the inner left border corner.
+          final left = rect.left + innerInset;
+          final maxWidth = rect.width * 0.52;
 
           return Stack(
             children: [
@@ -143,11 +154,11 @@ class _HudFramePainter extends CustomPainter {
     final rect = frame.outerRect;
 
     // Align the header line with the MODE label bottom edge.
-    final y = labelTop + labelHeight - thin * 0.5;
-    final startX = math.min(
-      rect.right,
-      labelLeft + labelMaxWidth + rect.width * 0.02,
-    );
+    final y = labelTop + labelHeight - thin * 0.15;
+
+    // Full-width header line; the MODE label backplate covers the portion
+    // behind it.
+    final startX = rect.left + rect.width * 0.055;
     final endX = rect.right - rect.width * 0.055;
     final width = math.max(0.0, endX - startX);
 

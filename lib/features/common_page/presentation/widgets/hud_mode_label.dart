@@ -29,8 +29,8 @@ class HudModeLabel extends StatelessWidget {
             padding: EdgeInsets.only(
               left: height * 0.50,
               right: height * 1.05,
-              top: height * 0.16,
-              bottom: height * 0.16,
+              top: height * 0.17,
+              bottom: height * 0.17,
             ),
             child: Align(
               alignment: Alignment.centerLeft,
@@ -40,9 +40,10 @@ class HudModeLabel extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
+                  fontFamily: 'Poppins',
                   fontSize: height * 0.44,
                   fontWeight: FontWeight.w600,
-                  letterSpacing: 0.8,
+                  letterSpacing: 0.6,
                   height: 1,
                 ),
               ),
