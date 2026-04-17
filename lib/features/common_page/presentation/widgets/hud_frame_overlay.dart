@@ -9,9 +9,14 @@ import 'hud_mode_label.dart';
 import 'hud_uptime_label.dart';
 
 class HudFrameOverlay extends StatelessWidget {
-  const HudFrameOverlay({super.key, this.modeText = 'MODE: SAFE HOLD'});
+  const HudFrameOverlay({
+    super.key,
+    this.modeText = 'MODE: SAFE HOLD',
+    this.drawLeftSlots = true,
+  });
 
   final String modeText;
+  final bool drawLeftSlots;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +60,7 @@ class HudFrameOverlay extends StatelessWidget {
                     labelHeight: labelH,
                     labelLeft: left,
                     labelMaxWidth: maxWidth,
+                    drawLeftSlots: drawLeftSlots,
                   ),
                   child: const SizedBox.expand(),
                 ),
@@ -130,12 +136,14 @@ class _HudFramePainter extends CustomPainter {
     required this.labelHeight,
     required this.labelLeft,
     required this.labelMaxWidth,
+    required this.drawLeftSlots,
   });
 
   final double labelTop;
   final double labelHeight;
   final double labelLeft;
   final double labelMaxWidth;
+  final bool drawLeftSlots;
 
   static const _cyan = Color(0xFF2FD0FF);
   static const _cyanSoft = Color(0xFF8BE9FF);
@@ -185,8 +193,82 @@ class _HudFramePainter extends CustomPainter {
 
     _topHeader(canvas, outer2, thin, mid, glow);
     _sideAccents(canvas, outer2, thin, mid, glow);
-    _leftSlots(canvas, outer2, thin, mid, glow);
+    _leftSidebarDivider(canvas, outer2, thin, mid, glow);
+    if (drawLeftSlots) {
+      _leftSlots(canvas, outer2, thin, mid, glow);
+    }
     _bottomNotch(canvas, outer2, thin, mid, glow);
+  }
+
+  void _leftSidebarDivider(
+    Canvas canvas,
+    RRect frame,
+    double thin,
+    double mid,
+    double glow,
+  ) {
+    final rect = frame.outerRect;
+
+    final panelLeft = rect.left + rect.width * 0.032;
+    final panelTop = rect.top + rect.height * 0.175;
+    final panelH = rect.height * 0.79;
+
+    final desiredSlotCount = 8;
+    final gap = math.max(panelH * 0.028, 6.0);
+    const minSlotH = 18.0;
+
+    final maxCount = ((panelH - gap) / (minSlotH + gap)).floor();
+    final slotCount = math.max(1, math.min(desiredSlotCount, maxCount));
+    final slotH = math.max(0.0, (panelH - gap * (slotCount + 1)) / slotCount);
+
+    final horizontalPad = (slotH * 0.35).clamp(10.0, 22.0).toDouble();
+
+    final maxSlotW = rect.width * 0.18;
+    final minSlotW = math.min(90.0, maxSlotW);
+    final targetSlotW = (rect.width * 0.13)
+        .clamp(minSlotW, maxSlotW)
+        .toDouble();
+
+    final maxPanelW = rect.width * 0.22;
+    final minPanelW = math.min(110.0, maxPanelW);
+    final panelW = (targetSlotW + 2 * horizontalPad)
+        .clamp(minPanelW, maxPanelW)
+        .toDouble();
+
+    final panelRect = Rect.fromLTWH(panelLeft, panelTop, panelW, panelH);
+
+    final lineX = panelRect.right + rect.width * 0.012;
+    final lineW = math.max(thin, rect.width * 0.0022);
+
+    final extend = rect.height * 0.045;
+    final yTop = math.max(rect.top + rect.height * 0.10, panelTop - extend);
+    final yBottom = math.min(
+      rect.bottom - rect.height * 0.06,
+      panelTop + panelH + extend,
+    );
+    final lineRect = Rect.fromLTWH(
+      lineX,
+      yTop,
+      lineW,
+      math.max(0.0, yBottom - yTop),
+    );
+
+    _glowRect(
+      canvas,
+      lineRect,
+      glowWidth: glow,
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          _a(_cyan, 0.0),
+          _a(_cyan, 0.55),
+          _a(_cyanSoft, 0.22),
+          _a(_cyan, 0.0),
+        ],
+        stops: const [0.0, 0.20, 0.78, 1.0],
+      ),
+    );
   }
 
   void _topHeader(
@@ -296,11 +378,11 @@ class _HudFramePainter extends CustomPainter {
     final rect = frame.outerRect;
 
     final panelLeft = rect.left + rect.width * 0.032;
-    final panelTop = rect.top + rect.height * 0.19;
-    final panelH = rect.height * 0.70;
+    final panelTop = rect.top + rect.height * 0.175;
+    final panelH = rect.height * 0.79;
 
     final desiredSlotCount = 8;
-    final gap = math.max(panelH * 0.020, 6.0);
+    final gap = math.max(panelH * 0.028, 6.0);
     const minSlotH = 18.0;
 
     final maxCount = ((panelH - gap) / (minSlotH + gap)).floor();
@@ -361,39 +443,6 @@ class _HudFramePainter extends CustomPainter {
         color: _a(_steel, 0.18),
       );
     }
-
-    final lineX = panel.outerRect.right + rect.width * 0.012;
-    final lineW = math.max(thin, rect.width * 0.0022);
-
-    final extend = rect.height * 0.045;
-    final yTop = math.max(rect.top + rect.height * 0.10, panelTop - extend);
-    final yBottom = math.min(
-      rect.bottom - rect.height * 0.06,
-      panelTop + panelH + extend,
-    );
-    final lineRect = Rect.fromLTWH(
-      lineX,
-      yTop,
-      lineW,
-      math.max(0.0, yBottom - yTop),
-    );
-
-    _glowRect(
-      canvas,
-      lineRect,
-      glowWidth: glow,
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          _a(_cyan, 0.0),
-          _a(_cyan, 0.55),
-          _a(_cyanSoft, 0.22),
-          _a(_cyan, 0.0),
-        ],
-        stops: const [0.0, 0.20, 0.78, 1.0],
-      ),
-    );
   }
 
   void _bottomNotch(

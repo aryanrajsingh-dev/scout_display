@@ -22,7 +22,7 @@ class AppBackground extends StatelessWidget {
             ),
           ),
         ),
-        const Positioned.fill(child: HudFrameOverlay()),
+        const Positioned.fill(child: HudFrameOverlay(drawLeftSlots: false)),
         child,
       ],
     );
