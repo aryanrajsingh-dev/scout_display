@@ -83,18 +83,34 @@ class HudFrameOverlay extends StatelessWidget {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                    child: HudUptimeLabel(height: labelH),
-                                  ),
-                                  SizedBox(
-                                    width: (labelH * 0.65).clamp(16.0, 92.0),
-                                  ),
-                                  Flexible(
-                                    child: HudDateTimeLabel(height: labelH),
-                                  ),
-                                ],
+                              child: LayoutBuilder(
+                                builder: (context, innerConstraints) {
+                                  final availableW = innerConstraints.maxWidth;
+                                  final desiredGap = (labelH * 0.65).clamp(
+                                    16.0,
+                                    92.0,
+                                  );
+                                  final minGap = (labelH * 0.25).clamp(
+                                    8.0,
+                                    18.0,
+                                  );
+                                  final adaptiveGap = math.min(
+                                    desiredGap,
+                                    math.max(minGap, availableW * 0.06),
+                                  );
+
+                                  return Row(
+                                    children: [
+                                      Flexible(
+                                        child: HudUptimeLabel(height: labelH),
+                                      ),
+                                      SizedBox(width: adaptiveGap),
+                                      Flexible(
+                                        child: HudDateTimeLabel(height: labelH),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
                             SizedBox(width: (labelH * 0.22).clamp(8.0, 22.0)),
@@ -110,7 +126,7 @@ class HudFrameOverlay extends StatelessWidget {
                                     SizedBox(
                                       width: (labelH * 0.18).clamp(8.0, 18.0),
                                     ),
-                                    HudBatteryStatusIcon(size: labelH * 0.7),
+                                    HudBatteryStatusIcon(size: labelH * 0.62),
                                   ],
                                 ),
                               ),
@@ -210,7 +226,7 @@ class _HudFramePainter extends CustomPainter {
     final rect = frame.outerRect;
 
     final panelLeft = rect.left + rect.width * 0.032;
-    final panelTop = rect.top + rect.height * 0.175;
+    final panelTop = rect.top + rect.height * 0.140;
     final panelH = rect.height * 0.79;
 
     final desiredSlotCount = 8;
@@ -378,7 +394,7 @@ class _HudFramePainter extends CustomPainter {
     final rect = frame.outerRect;
 
     final panelLeft = rect.left + rect.width * 0.032;
-    final panelTop = rect.top + rect.height * 0.175;
+    final panelTop = rect.top + rect.height * 0.135;
     final panelH = rect.height * 0.79;
 
     final desiredSlotCount = 8;

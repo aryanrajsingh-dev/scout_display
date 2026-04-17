@@ -36,7 +36,7 @@ class HudSidebar extends StatelessWidget {
         final rect = outer2;
 
         final panelLeft = rect.left + rect.width * 0.032;
-        final panelTop = rect.top + rect.height * 0.175;
+        final panelTop = rect.top + rect.height * 0.140;
         final panelH = rect.height * 0.79;
 
         final desiredSlotCount = 8;
