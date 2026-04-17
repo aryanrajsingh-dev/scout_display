@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'hud_mode_label.dart';
+import 'hud_uptime_label.dart';
 
 class HudFrameOverlay extends StatelessWidget {
   const HudFrameOverlay({super.key, this.modeText = 'MODE: SAFE HOLD'});
@@ -33,19 +34,12 @@ class HudFrameOverlay extends StatelessWidget {
 
           final thin = (s * 0.002).clamp(1.0, 2.5).toDouble();
 
-          // MODE label lives between the inner (steel) top border and the
-          // header gradient line below it.
-          final innerInset =
-              s * 0.03; // must match _HudFramePainter inner deflate
+          final innerInset = s * 0.03;
           final innerTop = rect.top + innerInset;
 
-          // Bigger on larger screens, still clamps for small screens.
-          // Slightly overlap the inner border so it feels "attached".
-          // Nudge down a bit to better sit between the two header lines.
           final topY = innerTop - thin * 0.15;
           final labelH = (s * 0.088).clamp(30.0, 86.0).toDouble();
 
-          // Align with the inner left border corner.
           final left = rect.left + innerInset;
           final maxWidth = rect.width * 0.52;
 
@@ -65,10 +59,25 @@ class HudFrameOverlay extends StatelessWidget {
               Positioned(
                 left: left,
                 top: topY,
-                child: HudModeLabel(
-                  text: modeText,
+                child: SizedBox(
+                  width: rect.right - rect.width * 0.055 - left,
                   height: labelH,
-                  maxWidth: maxWidth,
+                  child: Row(
+                    children: [
+                      HudModeLabel(
+                        text: modeText,
+                        height: labelH,
+                        maxWidth: maxWidth,
+                      ),
+                      SizedBox(width: (labelH * 0.22).clamp(8.0, 22.0)),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: HudUptimeLabel(height: labelH),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -153,11 +162,8 @@ class _HudFramePainter extends CustomPainter {
   ) {
     final rect = frame.outerRect;
 
-    // Align the header line with the MODE label bottom edge.
     final y = labelTop + labelHeight - thin * 0.15;
 
-    // Full-width header line; the MODE label backplate covers the portion
-    // behind it.
     final startX = rect.left + rect.width * 0.055;
     final endX = rect.right - rect.width * 0.055;
     final width = math.max(0.0, endX - startX);
@@ -253,26 +259,20 @@ class _HudFramePainter extends CustomPainter {
   ) {
     final rect = frame.outerRect;
 
-    // Size the outer panel based on the inner slot width (tight padding).
     final panelLeft = rect.left + rect.width * 0.032;
     final panelTop = rect.top + rect.height * 0.19;
     final panelH = rect.height * 0.70;
 
-    // Adapt slot count/size on short screens so the sidebar doesn't visually
-    // disappear (many tiny boxes + heavy glow).
     final desiredSlotCount = 8;
     final gap = math.max(panelH * 0.020, 6.0);
     const minSlotH = 18.0;
 
-    // Keep each slot above a minimum height; reduce count on short screens.
     final maxCount = ((panelH - gap) / (minSlotH + gap)).floor();
     final slotCount = math.max(1, math.min(desiredSlotCount, maxCount));
     final slotH = math.max(0.0, (panelH - gap * (slotCount + 1)) / slotCount);
 
     final horizontalPad = (slotH * 0.35).clamp(10.0, 22.0).toDouble();
 
-    // IMPORTANT: Avoid clamp(min, rect.width * k) where min > max on small
-    // screens (would throw and skip painting the whole sidebar).
     final maxSlotW = rect.width * 0.18;
     final minSlotW = math.min(90.0, maxSlotW);
     final targetSlotW = (rect.width * 0.13)

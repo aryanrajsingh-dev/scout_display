@@ -45,6 +45,7 @@ class HudModeLabel extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.6,
                   height: 1,
+                  decoration: TextDecoration.none,
                 ),
               ),
             ),
@@ -79,7 +80,6 @@ class _HudModeLabelPainter extends CustomPainter {
       ..lineTo(0, h)
       ..close();
 
-    // Opaque backplate to fully hide any HUD lines behind this label.
     final fill = Paint()
       ..style = PaintingStyle.fill
       ..shader = const LinearGradient(
@@ -118,8 +118,6 @@ class _HudModeLabelPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..isAntiAlias = true;
 
-    // Draw the stroke/glow only outside the label shape so no bright lines show
-    // inside under the text.
     final pad = glowWidth + strokeWidth;
     final full = Path()
       ..addRect(Rect.fromLTWH(-pad, -pad, w + 2 * pad, h + 2 * pad));
