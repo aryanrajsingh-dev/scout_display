@@ -8,7 +8,9 @@
       "version": "1.0.0+1",
       "dependencies": [
         "cupertino_icons",
-        "flutter"
+        "flutter",
+        "flutter_riverpod",
+        "state_notifier"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -44,6 +46,13 @@
       "name": "cupertino_icons",
       "version": "1.0.9",
       "dependencies": []
+    },
+    {
+      "name": "state_notifier",
+      "version": "0.7.2+1",
+      "dependencies": [
+        "meta"
+      ]
     },
     {
       "name": "flutter",
@@ -224,6 +233,27 @@
       "name": "vm_service",
       "version": "15.1.0",
       "dependencies": []
+    },
+    {
+      "name": "flutter_riverpod",
+      "version": "2.6.1",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "meta",
+        "riverpod",
+        "state_notifier"
+      ]
+    },
+    {
+      "name": "riverpod",
+      "version": "2.6.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "stack_trace",
+        "state_notifier"
+      ]
     }
   ],
   "configVersion": 1

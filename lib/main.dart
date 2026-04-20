@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'features/common_page/presentation/screens/common_page.dart';
 import 'features/common_page/presentation/widgets/app_background.dart';
@@ -7,7 +8,8 @@ import 'features/common_page/presentation/widgets/app_background.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  runApp(const MyApp());
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +35,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       builder: (context, child) {
-        return AppBackground(child: child ?? const SizedBox.shrink());
+        return AppBackground(
+          child: child ?? const SizedBox.shrink(),
+        );
       },
       home: const CommonPage(),
     );

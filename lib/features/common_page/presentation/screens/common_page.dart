@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/hud_sidebar.dart';
+import '../providers/time_sync_provider.dart';
 
-class CommonPage extends StatefulWidget {
+class CommonPage extends ConsumerStatefulWidget {
   const CommonPage({super.key});
 
   @override
-  State<CommonPage> createState() => _CommonPageState();
+  ConsumerState<CommonPage> createState() => _CommonPageState();
 }
 
-class _CommonPageState extends State<CommonPage> {
+class _CommonPageState extends ConsumerState<CommonPage> {
   int _selectedIndex = 0;
 
   static const _items = <String>[
@@ -24,6 +26,17 @@ class _CommonPageState extends State<CommonPage> {
   ];
 
   @override
+  void initState() {
+  super.initState();
+
+  Future.microtask(() async {
+    await ref.read(timeSyncNotifierProvider.notifier).sync();
+
+    debugPrint("Time Sync Completed");
+  });
+}
+
+  @override
   Widget build(BuildContext context) {
     final clampedIndex = _selectedIndex.clamp(0, _items.length - 1);
 
@@ -34,22 +47,7 @@ class _CommonPageState extends State<CommonPage> {
           IndexedStack(
             index: clampedIndex,
             children: [
-              // Placeholder screens; add real screen content later.
               for (final _ in _items) const SizedBox.expand(),
-
-              // Screen-name placeholders (disabled for now):
-              // for (final name in _items)
-              //   Center(
-              //     child: Text(
-              //       name,
-              //       style: const TextStyle(
-              //         fontSize: 28,
-              //         letterSpacing: 2.0,
-              //         fontWeight: FontWeight.w600,
-              //         color: Colors.white70,
-              //       ),
-              //     ),
-              //   ),
             ],
           ),
           HudSidebar(
