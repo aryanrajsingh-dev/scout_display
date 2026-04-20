@@ -27,14 +27,18 @@ class _CommonPageState extends ConsumerState<CommonPage> {
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  Future.microtask(() async {
-    await ref.read(timeSyncNotifierProvider.notifier).sync();
+    Future.microtask(() {
+      ref.read(timeSyncNotifierProvider.notifier).start();
+    });
+  }
 
-    debugPrint("Time Sync Completed");
-  });
-}
+  @override
+  void dispose() {
+    ref.read(timeSyncNotifierProvider.notifier).stop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

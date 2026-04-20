@@ -1,18 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scout_display/core/utils/date_time_format.dart';
+import 'package:scout_display/features/common_page/presentation/providers/time_sync_provider.dart';
 
-class HudDateTimeLabel extends StatefulWidget {
+class HudDateTimeLabel extends ConsumerStatefulWidget {
   const HudDateTimeLabel({super.key, required this.height});
 
   final double height;
 
   @override
-  State<HudDateTimeLabel> createState() => _HudDateTimeLabelState();
+  ConsumerState<HudDateTimeLabel> createState() => _HudDateTimeLabelState();
 }
 
-class _HudDateTimeLabelState extends State<HudDateTimeLabel> {
+class _HudDateTimeLabelState extends ConsumerState<HudDateTimeLabel> {
   Timer? _timer;
 
   @override
@@ -36,8 +38,11 @@ class _HudDateTimeLabelState extends State<HudDateTimeLabel> {
     final h = widget.height;
     final fontSize = h * 0.44;
 
+    final offset = ref.watch(timeSyncNotifierProvider);
+    final corrected = DateTime.now().add(offset);
+
     return Text(
-      formatDdMmYyyyHm(DateTime.now()),
+      formatDdMmYyyyHm(corrected),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(

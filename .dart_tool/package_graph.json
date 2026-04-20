@@ -55,6 +55,17 @@
       ]
     },
     {
+      "name": "flutter_riverpod",
+      "version": "2.6.1",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "meta",
+        "riverpod",
+        "state_notifier"
+      ]
+    },
+    {
       "name": "flutter",
       "version": "0.0.0",
       "dependencies": [
@@ -156,6 +167,16 @@
       ]
     },
     {
+      "name": "riverpod",
+      "version": "2.6.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "stack_trace",
+        "state_notifier"
+      ]
+    },
+    {
       "name": "sky_engine",
       "version": "0.0.0",
       "dependencies": []
@@ -233,27 +254,6 @@
       "name": "vm_service",
       "version": "15.1.0",
       "dependencies": []
-    },
-    {
-      "name": "flutter_riverpod",
-      "version": "2.6.1",
-      "dependencies": [
-        "collection",
-        "flutter",
-        "meta",
-        "riverpod",
-        "state_notifier"
-      ]
-    },
-    {
-      "name": "riverpod",
-      "version": "2.6.1",
-      "dependencies": [
-        "collection",
-        "meta",
-        "stack_trace",
-        "state_notifier"
-      ]
     }
   ],
   "configVersion": 1
